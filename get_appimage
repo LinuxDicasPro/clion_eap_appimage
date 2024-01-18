@@ -60,12 +60,13 @@ test ! -e "appimagetool-x86_64.AppImage" && {
 
 link_prg1="https://download.jetbrains.com/cpp/CLion-${version[0]}.tar.gz"
 link_prg2="https://download.jetbrains.com/cpp/CLion-${version[1]}.tar.gz"
+ver="${version[0]}"
 
 #########
 
 
-wget -c -q --show-progress "$link_prg1" || wget -c -q --show-progress "$link_prg2"
-file_prg="$(echo CLion-*)"
+wget -c -q --show-progress "$link_prg1" || { wget -c -q --show-progress "$link_prg2" ; ver="${version[1]}"; }
+file_prg="$(echo CLion*$ver*)"
 
 cwd=$PWD
 
@@ -110,12 +111,12 @@ cd ..
 printf "\n"; for ((i=0; i<$COLUMNS; i++)); { printf '─'; }; echo -e "\n"
 
 env ARCH=$arch ./appimagetool-x86_64.AppImage "$prg.AppDir"
-mv "${appimage_name// /_}-$arch.AppImage" "$prg-eap-$version-$arch.AppImage"
+mv "${appimage_name// /_}-$arch.AppImage" "$prg-eap-$ver-$arch.AppImage"
 
 printf "\n"; for ((i=0; i<$COLUMNS; i++)); { printf '─'; }; echo -e "\n"
 
 rm -rf "$prg.AppDir"
 cd ..
 
-echo "appimage saved in $destdir/$prg-eap-$version-$arch.AppImage"
+echo "appimage saved in $destdir/$prg-eap-$ver-$arch.AppImage"
 exit 0
